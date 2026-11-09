@@ -1,34 +1,566 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#100b1d"><title>DQR Drops 2</title>
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100b1d">
+<title>DQR Drops 2.0</title>
+
 <style>
-:root{color-scheme:dark;--bg:#0b0912;--line:#35264d;--text:#f7f2ff;--muted:#a69ab9;--purple:#a65cff;--cyan:#63e5ce}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(700px 420px at 50% -170px,#54248b 0%,transparent 72%),var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,sans-serif}
-.wrap{max-width:900px;margin:auto;padding:18px 15px 100px}header{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 19px}.brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(140deg,#c06cff,#6126b7);font-weight:1000;font-size:19px;box-shadow:0 0 25px #a65cff55}.brand strong{display:block;letter-spacing:1.4px;font-size:17px}.brand small{color:var(--muted);font-size:11px}.live{font-size:11px;color:var(--cyan);border:1px solid #286d65;background:#102b2a;border-radius:30px;padding:7px 10px}
-.hero{padding:21px 19px;border:1px solid #54317a;border-radius:22px;background:linear-gradient(120deg,#24133c,#171025 62%,#12232c);box-shadow:0 10px 35px #0005}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:800}.hero h1{font-size:29px;line-height:1.08;margin:8px 0}.hero p{font-size:12px;color:#c1b3d3;margin:0;max-width:360px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0}.stat{border:1px solid var(--line);background:linear-gradient(150deg,#1b1428,#120e1b);border-radius:15px;padding:13px 11px;min-width:0}.stat span{display:block;font-size:10px;color:var(--muted)}.stat b{font-size:22px;display:block;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.panel{border:1px solid var(--line);background:#120e1b;border-radius:18px;margin-top:14px;overflow:hidden}.panelhead{display:flex;justify-content:space-between;align-items:center;padding:15px 15px 12px}.panelhead h2{font-size:15px;margin:0}.panelhead small{font-size:10px;color:var(--muted)}
-.rarity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 13px}.rarity-card{border:1px solid var(--rarity);background:linear-gradient(145deg,color-mix(in srgb,var(--rarity) 13%,#171020),#110d19);border-radius:13px;padding:11px 8px;text-align:center;min-width:0}.symbol{font-size:19px;color:var(--rarity)}.rarity-card b{display:block;color:var(--rarity);font-size:11px;margin:2px 0}.rarity-card strong{font-size:20px;display:block}.rarity-card small{font-size:10px;color:var(--muted)}
-.toolbar{display:flex;gap:8px;padding:0 12px 12px}.toolbar input,.toolbar select{min-width:0;background:#0e0b15;border:1px solid var(--line);border-radius:11px;padding:11px 12px;color:var(--text);font:inherit;font-size:12px;outline:none}.toolbar input{flex:1.4;width:100%}.toolbar select{flex:1;width:100%}
-.group{margin:0 11px 10px;border:1px solid var(--line);border-radius:14px;overflow:hidden}.group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:12px;background:#191326}.group summary::-webkit-details-marker{display:none}.rarity-dot{width:11px;height:11px;border-radius:50%;background:var(--rarity);box-shadow:0 0 11px var(--rarity);flex:none}.group-name{font-weight:850;color:var(--rarity);font-size:13px;flex:1}.group-count{font-size:11px;color:var(--muted)}.chevron{color:var(--muted);font-size:16px;transition:transform .2s}details[open] .chevron{transform:rotate(90deg)}
-.item-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;border-top:1px solid #2a2038}.item-row b{display:block;font-size:13px;overflow-wrap:anywhere}.item-row small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.qty{text-align:right;font-size:18px;font-weight:850;white-space:nowrap}.qty small{font-size:10px;color:var(--muted);font-weight:500}
-.empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:12px}.note{padding:12px 15px;color:var(--muted);font-size:10px;text-align:center}.bottom{position:fixed;bottom:0;left:0;right:0;padding:10px 15px calc(10px + env(safe-area-inset-bottom));background:#100b1df2;border-top:1px solid #34234b;backdrop-filter:blur(16px);display:flex;justify-content:center;z-index:5}.bottom nav{width:min(600px,100%);display:flex;justify-content:space-around}.bottom a{color:var(--muted);font-size:10px;text-decoration:none;text-align:center}.bottom a span{display:block;font-size:19px;margin-bottom:2px}.bottom a.active{color:#c58aff}
-@media(min-width:650px){.wrap{padding-top:28px}.rarity-grid{grid-template-columns:repeat(6,1fr)}.hero{padding:27px}.hero h1{font-size:36px}.stats{gap:13px}.stat{padding:16px}.stat b{font-size:26px}}
-</style></head><body><main class="wrap">
-<header><div class="brand"><div class="logo">DQ</div><div><strong>DQR <span style="color:#c58aff">DROPS</span></strong><small>Dungeon Quest loot tracker</small></div></div><div class="live" id="status">Connecting</div></header>
-<section class="hero"><div class="eyebrow">Discord drop database</div><h1>Every drop.<br><span style="color:#c58aff">Counted & sorted.</span></h1><p>Identical items are combined automatically. Browse total loot by rarity, quantity and drop source.</p></section>
-<section class="stats"><div class="stat"><span>Total item drops</span><b id="totalDrops">—</b></div><div class="stat"><span>Unique items</span><b id="uniqueItems">—</b></div><div class="stat"><span>Runs recorded</span><b id="totalRuns">—</b></div></section>
-<section class="panel" id="rarityPanel"><div class="panelhead"><h2>✦ Rarity breakdown</h2><small>ITEM QUANTITY</small></div><div class="rarity-grid" id="rarityGrid"></div></section>
-<section class="panel" id="inventoryPanel"><div class="panelhead"><h2>▣ Item inventory</h2><small id="resultCount">0 ITEMS</small></div><div class="toolbar"><input id="search" type="search" placeholder="Search items…" autocomplete="off"><select id="sort"><option value="rarity">Rarity order</option><option value="quantity">Most obtained</option><option value="name">Name A–Z</option></select></div><div id="groups"><div class="empty">Waiting for your first Discord drop records…</div></div><div class="note">Matching item names and rarities are combined across all recorded Discord drops.</div></section>
-<section class="panel" id="recent"><div class="panelhead"><h2>◷ Latest activity</h2><small>RECENT RUNS</small></div><div id="recentRows" class="empty">No activity yet.</div></section>
-</main><div class="bottom"><nav><a class="active" href="#rarityPanel"><span>⌂</span>Overview</a><a href="#inventoryPanel"><span>▦</span>Inventory</a><a href="#recent"><span>◷</span>Activity</a></nav></div>
+:root {
+  color-scheme: dark;
+  --bg:#0b0912;
+  --panel:#151020;
+  --line:#35264d;
+  --text:#f7f2ff;
+  --muted:#a69ab9;
+  --purple:#b66cff;
+  --cyan:#63e5ce;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:radial-gradient(700px 420px at 50% -170px,#54248b 0%,transparent 72%),var(--bg);
+  color:var(--text);
+  font:15px/1.45 Inter,system-ui,sans-serif;
+}
+.wrap { max-width:950px;margin:auto;padding:18px 15px 100px; }
+header {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 2px 19px;
+}
+.brand { display:flex;align-items:center;gap:11px; }
+.logo {
+  width:43px;height:43px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(140deg,#c06cff,#6126b7);
+  font-weight:1000;font-size:19px;box-shadow:0 0 25px #a65cff55;
+}
+.brand strong { display:block;letter-spacing:1.4px;font-size:17px; }
+.brand small { color:var(--muted);font-size:11px; }
+.live {
+  font-size:11px;color:var(--cyan);border:1px solid #286d65;
+  background:#102b2a;border-radius:30px;padding:7px 10px;
+}
+.hero {
+  padding:22px 19px;border:1px solid #54317a;border-radius:22px;
+  background:linear-gradient(120deg,#24133c,#171025 62%,#12232c);
+  box-shadow:0 10px 35px #0005;
+}
+.eyebrow {
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cyan);font-weight:800;
+}
+.hero h1 { font-size:29px;line-height:1.08;margin:8px 0; }
+.hero p { font-size:12px;color:#c1b3d3;margin:0; }
+.stats { display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0; }
+.stat {
+  border:1px solid var(--line);
+  background:linear-gradient(150deg,#1b1428,#120e1b);
+  border-radius:15px;padding:13px 11px;min-width:0;
+}
+.stat span { display:block;font-size:10px;color:var(--muted); }
+.stat b {
+  font-size:22px;display:block;margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.panel {
+  border:1px solid var(--line);background:#120e1b;
+  border-radius:18px;margin-top:14px;overflow:hidden;
+}
+.panelhead {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:15px 15px 12px;
+}
+.panelhead h2 { font-size:15px;margin:0; }
+.panelhead small { font-size:10px;color:var(--muted); }
+.rarity-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;padding:0 12px 13px;
+}
+.rarity-card {
+  border:1px solid var(--rarity);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--rarity) 13%,#171020),#110d19);
+  border-radius:13px;padding:11px 8px;text-align:center;min-width:0;
+}
+.symbol { font-size:19px;color:var(--rarity); }
+.rarity-card b { display:block;color:var(--rarity);font-size:11px;margin:2px 0; }
+.rarity-card strong { font-size:20px;display:block; }
+.rarity-card small { font-size:10px;color:var(--muted); }
+
+.toolbar { display:flex;gap:8px;padding:0 12px 13px; }
+.toolbar input,.toolbar select {
+  min-width:0;background:#0e0b15;border:1px solid var(--line);
+  border-radius:11px;padding:11px 12px;color:var(--text);
+  font:inherit;font-size:12px;outline:none;
+}
+.toolbar input { flex:1.5;width:100%; }
+.toolbar select { flex:1;width:100%; }
+
+.group {
+  margin:0 11px 10px;border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;background:#100c18;
+}
+.group summary {
+  list-style:none;cursor:pointer;display:flex;align-items:center;
+  gap:10px;padding:14px 12px;
+  background:linear-gradient(100deg,#21162f,#171020);
+  transition:background .2s;
+}
+.group summary:hover { background:#281a3a; }
+.group summary::-webkit-details-marker { display:none; }
+.group-icon {
+  width:34px;height:34px;border-radius:11px;
+  display:grid;place-items:center;background:#35234d;
+  font-size:17px;flex:none;
+}
+.group-info { flex:1;min-width:0; }
+.group-name { display:block;font-weight:850;font-size:13px; }
+.group-sub { display:block;color:var(--muted);font-size:10px;margin-top:2px; }
+.group-count {
+  color:#c9a5ff;background:#35234d;border-radius:20px;
+  padding:5px 8px;font-size:10px;white-space:nowrap;
+}
+.chevron { color:var(--muted);font-size:18px;transition:transform .2s; }
+details[open] .chevron { transform:rotate(90deg); }
+
+.drop-row {
+  padding:12px;border-top:1px solid #2a2038;
+  display:flex;justify-content:space-between;gap:10px;
+  align-items:center;background:#120e1b;
+}
+.drop-row:nth-child(even) { background:#171120; }
+.drop-main { flex:1;min-width:0; }
+.drop-title {
+  font-size:12px;font-weight:800;overflow-wrap:anywhere;
+}
+.drop-meta {
+  display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;
+}
+.pill {
+  display:inline-flex;align-items:center;
+  border:1px solid #423353;background:#21192d;
+  color:#c8badb;border-radius:20px;padding:3px 7px;
+  font-size:9px;
+}
+.rarity-pill { color:var(--rarity);border-color:var(--rarity); }
+.roll {
+  text-align:right;min-width:90px;max-width:125px;
+}
+.roll-percent { font-size:18px;font-weight:900;color:#c58aff; }
+.roll-damage { display:block;font-size:11px;font-weight:800;color:#e9d8ff; }
+.roll-type { display:block;color:var(--muted);font-size:9px; }
+.roll-qty { display:block;color:var(--muted);font-size:10px;margin-top:3px; }
+
+.empty {
+  padding:28px 18px;text-align:center;color:var(--muted);font-size:12px;
+}
+.note { padding:12px 15px;color:var(--muted);font-size:10px;text-align:center; }
+.bottom {
+  position:fixed;bottom:0;left:0;right:0;
+  padding:10px 15px calc(10px + env(safe-area-inset-bottom));
+  background:#100b1df2;border-top:1px solid #34234b;
+  backdrop-filter:blur(16px);display:flex;justify-content:center;z-index:5;
+}
+.bottom nav { width:min(600px,100%);display:flex;justify-content:space-around; }
+.bottom a { color:var(--muted);font-size:10px;text-decoration:none;text-align:center; }
+.bottom a span { display:block;font-size:19px;margin-bottom:2px; }
+.bottom a.active { color:#c58aff; }
+
+@media(min-width:650px) {
+  .wrap { padding-top:28px; }
+  .rarity-grid { grid-template-columns:repeat(6,1fr); }
+  .hero { padding:27px; }
+  .hero h1 { font-size:36px; }
+  .stats { gap:13px; }
+  .stat { padding:16px; }
+  .stat b { font-size:26px; }
+}
+</style>
+</head>
+
+<body>
+<main class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="logo">DQ</div>
+    <div>
+      <strong>DQR <span style="color:#c58aff">DROPS</span></strong>
+      <small>Dungeon Quest loot tracker</small>
+    </div>
+  </div>
+  <div class="live" id="status">Connecting</div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Discord drop database</div>
+  <h1>Every drop.<br><span style="color:#c58aff">Cleanly sorted.</span></h1>
+  <p>Your Nightmare loot collection, organized by equipment type and quality.</p>
+</section>
+
+<section class="stats">
+  <div class="stat"><span>Total item drops</span><b id="totalDrops">—</b></div>
+  <div class="stat"><span>Unique items</span><b id="uniqueItems">—</b></div>
+  <div class="stat"><span>Runs recorded</span><b id="totalRuns">—</b></div>
+</section>
+
+<section class="panel" id="rarityPanel">
+  <div class="panelhead">
+    <h2>✦ Rarity breakdown</h2>
+    <small>ITEM QUANTITY</small>
+  </div>
+  <div class="rarity-grid" id="rarityGrid"></div>
+</section>
+
+<section class="panel" id="inventoryPanel">
+  <div class="panelhead">
+    <h2>▣ Loot collection</h2>
+    <small id="resultCount">0 ITEMS</small>
+  </div>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search item or category…" autocomplete="off">
+    <select id="sort">
+      <option value="best">Best percentage</option>
+      <option value="damage">Highest damage</option>
+      <option value="newest">Newest drops</option>
+    </select>
+  </div>
+
+  <div id="groups">
+    <div class="empty">Waiting for your Discord drop records…</div>
+  </div>
+
+  <div class="note">
+    Tap a collection to view its drops. Rolls are sorted by percentage and damage.
+  </div>
+</section>
+
+<section class="panel" id="recent">
+  <div class="panelhead">
+    <h2>◷ Latest activity</h2>
+    <small>RECENT RUNS</small>
+  </div>
+  <div id="recentRows" class="empty">No activity yet.</div>
+</section>
+
+</main>
+
+<div class="bottom">
+  <nav>
+    <a class="active" href="#rarityPanel"><span>⌂</span>Overview</a>
+    <a href="#inventoryPanel"><span>▦</span>Collection</a>
+    <a href="#recent"><span>◷</span>Activity</a>
+  </nav>
+</div>
+
 <script>
-const order=["Ultimate","Legendary","Epic","Rare","Uncommon","Common"],meta={Ultimate:{c:"#ff776f",s:"♛"},Legendary:{c:"#ffca55",s:"★"},Epic:{c:"#bd83ff",s:"✦"},Rare:{c:"#55b9ff",s:"●"},Uncommon:{c:"#83d66f",s:"●"},Common:{c:"#c6cbd5",s:"●"}};
-let records=[];const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));const time=v=>{try{return new Date(v).toLocaleString()}catch{return""}};
-function aggregate(){const map=new Map();for(const run of records)for(const it of run.items||[]){const name=String(it.name||"").trim(),rarity=meta[it.rarity]?it.rarity:"Common";if(!name)continue;const key=rarity+"::"+name.toLowerCase();if(!map.has(key))map.set(key,{name,rarity,quantity:0,messages:new Set(),potentials:[],lastSeen:run.timestamp});const x=map.get(key);x.quantity+=Number(it.quantity)||1;x.messages.add(run.discordMessageId||run.id);if(it.potential)x.potentials.push(it.potential+(it.percent!=null?" ("+it.percent+"%)":""));if(new Date(run.timestamp)>new Date(x.lastSeen))x.lastSeen=run.timestamp;}return [...map.values()]}
-function render(){const all=aggregate(),total=all.reduce((n,x)=>n+x.quantity,0);document.getElementById("totalDrops").textContent=total.toLocaleString();document.getElementById("uniqueItems").textContent=all.length.toLocaleString();document.getElementById("totalRuns").textContent=records.length.toLocaleString();const counts=Object.fromEntries(order.map(r=>[r,all.filter(x=>x.rarity===r).reduce((n,x)=>n+x.quantity,0)]));document.getElementById("rarityGrid").innerHTML=order.map(r=>`<div class="rarity-card" style="--rarity:${meta[r].c}"><div class="symbol">${meta[r].s}</div><b>${r}</b><strong>${counts[r].toLocaleString()}</strong><small>items</small></div>`).join("");
-const q=document.getElementById("search").value.trim().toLowerCase(),sort=document.getElementById("sort").value,filtered=all.filter(x=>x.name.toLowerCase().includes(q));document.getElementById("resultCount").textContent=filtered.reduce((n,x)=>n+x.quantity,0).toLocaleString()+" ITEMS";let out="";for(const r of order){let rows=filtered.filter(x=>x.rarity===r);if(sort==="quantity")rows.sort((a,b)=>b.quantity-a.quantity||a.name.localeCompare(b.name));else rows.sort((a,b)=>a.name.localeCompare(b.name));if(!rows.length)continue;const qty=rows.reduce((n,x)=>n+x.quantity,0);out+=`<details class="group" open style="--rarity:${meta[r].c}"><summary><span class="rarity-dot"></span><span class="group-name">${r}</span><span class="group-count">${qty.toLocaleString()} items · ${rows.length} types</span><span class="chevron">›</span></summary>`+rows.map(x=>`<div class="item-row"><div><b>${esc(x.name)}</b><small>${x.messages.size} Discord message(s) · Last: ${esc(time(x.lastSeen))}${x.potentials.length?" · "+x.potentials.length+" potential roll(s)":""}</small></div><div class="qty">×${x.quantity.toLocaleString()}<small>obtained</small></div></div>`).join("")+"</details>"}document.getElementById("groups").innerHTML=out||'<div class="empty">No matching items yet. Your items will appear here when the Discord bot reads drop embeds.</div>';
-const latest=[...records].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)).slice(0,5);document.getElementById("recentRows").innerHTML=latest.length?latest.map(x=>`<div class="item-row"><div><b>${esc(x.dungeon||x.title||"Dungeon run")}</b><small>${esc(x.boss||"Boss unknown")} · ${esc(time(x.timestamp))}</small></div><div class="qty">${(x.items||[]).reduce((n,i)=>n+(Number(i.quantity)||1),0)}<small>items</small></div></div>`).join(""):'<div class="empty">No activity yet.</div>'}
-async function refresh(){try{const r=await fetch("/api/drops");if(!r.ok)throw Error("API "+r.status);records=await r.json();document.getElementById("status").textContent="Live feed";render()}catch(e){document.getElementById("status").textContent="Offline";console.error(e)}}
-document.getElementById("search").addEventListener("input",render);document.getElementById("sort").addEventListener("change",render);refresh();setInterval(refresh,15000);
-</script></body></html>
+const order=["Ultimate","Legendary","Epic","Rare","Uncommon","Common"];
+
+const meta={
+  Ultimate:{c:"#ff776f",s:"♛"},
+  Legendary:{c:"#ffca55",s:"★"},
+  Epic:{c:"#bd83ff",s:"✦"},
+  Rare:{c:"#55b9ff",s:"●"},
+  Uncommon:{c:"#83d66f",s:"●"},
+  Common:{c:"#c6cbd5",s:"●"}
+};
+
+const catalog={
+  "oathswornhalberd":{category:"Warrior Weapon"},
+  "oathswornhammer":{category:"Warrior Weapon"},
+  "oathswornswordandshield":{category:"Warrior Weapon"},
+  "gildenscaleoathandaegis":{category:"Warrior Weapon"},
+  "lumenflamesjudgement":{category:"Warrior Weapon"},
+
+  "oathswornwarriorset":{category:"Warrior Armor",tier:"Basic"},
+  "gildenscalewarriorset":{category:"Warrior Armor",tier:"Tier 3"},
+
+  "dracanigildedstaff":{category:"Mage Weapon"},
+  "oathswornspellscythe":{category:"Mage Weapon"},
+  "oathswornstaffandtome":{category:"Mage Weapon"},
+  "daybreakandgildensong":{category:"Mage Weapon"},
+  "lumenflamesabsolution":{category:"Mage Weapon"},
+
+  "oathswornmageset":{category:"Mage Armor",tier:"Basic"},
+  "gildenscalemageset":{category:"Mage Armor",tier:"Tier 3"},
+
+  "oathswornguardianset":{category:"Guardian Armor",tier:"Basic"},
+  "gildenscaleguardianset":{category:"Guardian Armor",tier:"Tier 3"}
+};
+
+let records=[];
+
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+const time=v=>{
+  try{return new Date(v).toLocaleString();}
+  catch{return "";}
+};
+
+function normalize(v){
+  return String(v||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+}
+
+function getItemInfo(item){
+  const key=normalize(item.name);
+  const known=catalog[key]||{};
+  return {
+    category:item.category||known.category||"Other Loot",
+    tier:item.armorTier||known.tier||null
+  };
+}
+
+function getGroup(item){
+  const info=getItemInfo(item);
+  const category=info.category;
+
+  if(category.endsWith("Armor")){
+    const character=category.replace(" Armor","");
+    const style=info.tier==="Tier 3"?"Gildenscale":"Oathsworn";
+    return {
+      key:style+" "+character+" Armors",
+      label:style+" "+character+" Armors",
+      icon:character==="Warrior"?"⚔️":character==="Mage"?"🔮":"🛡️",
+      subtitle:info.tier==="Tier 3"?"Tier 3 armor collection":"Basic armor collection"
+    };
+  }
+
+  if(category.endsWith("Weapon")){
+    const character=category.replace(" Weapon","");
+    return {
+      key:character+" Weapons",
+      label:character+" Weapons",
+      icon:character==="Warrior"?"⚔️":"🔮",
+      subtitle:character+" weapon collection"
+    };
+  }
+
+  return {
+    key:"Other Loot",
+    label:"Other Loot",
+    icon:"✦",
+    subtitle:"Uncategorized drops"
+  };
+}
+
+function damageNumber(value){
+  const match=String(value||"").replace(/,/g,"").match(/([\d.]+)\s*([KMBT]?)/i);
+  if(!match)return -1;
+  const n=Number(match[1]);
+  const unit=(match[2]||"").toUpperCase();
+  const multiplier={K:1e3,M:1e6,B:1e9,T:1e12};
+  return n*(multiplier[unit]||1);
+}
+
+function collectDrops(){
+  const groups=new Map();
+  const allItems=new Set();
+  let total=0;
+
+  for(const run of records){
+    for(const item of run.items||[]){
+      if(!item.name)continue;
+
+      const qty=Math.max(1,Number(item.quantity)||1);
+      const rarity=meta[item.rarity]?item.rarity:"Common";
+      const group=getGroup(item);
+
+      total+=qty;
+      allItems.add(normalize(item.name));
+
+      if(!groups.has(group.key)){
+        groups.set(group.key,{
+          ...group,
+          drops:[],
+          quantity:0
+        });
+      }
+
+      const entry=groups.get(group.key);
+      entry.quantity+=qty;
+
+      entry.drops.push({
+        name:item.name,
+        rarity,
+        quantity:qty,
+        potential:item.potential||"",
+        percent:item.percent==null?null:Number(item.percent),
+        damage:damageNumber(item.potential),
+        dungeon:run.dungeon||"Unknown dungeon",
+        boss:run.boss||"Unknown boss",
+        timestamp:run.timestamp,
+        source:run.sourceUrl||""
+      });
+    }
+  }
+
+  return {groups,total,unique:allItems.size};
+}
+
+function render(){
+  const data=collectDrops();
+  const {groups,total,unique}=data;
+
+  document.getElementById("totalDrops").textContent=total.toLocaleString();
+  document.getElementById("uniqueItems").textContent=unique.toLocaleString();
+  document.getElementById("totalRuns").textContent=records.length.toLocaleString();
+
+  const rarityCounts=Object.fromEntries(order.map(r=>[r,0]));
+
+  for(const run of records){
+    for(const item of run.items||[]){
+      const rarity=meta[item.rarity]?item.rarity:"Common";
+      rarityCounts[rarity]+=Math.max(1,Number(item.quantity)||1);
+    }
+  }
+
+  document.getElementById("rarityGrid").innerHTML=order.map(r=>`
+    <div class="rarity-card" style="--rarity:${meta[r].c}">
+      <div class="symbol">${meta[r].s}</div>
+      <b>${r}</b>
+      <strong>${rarityCounts[r].toLocaleString()}</strong>
+      <small>items</small>
+    </div>
+  `).join("");
+
+  const query=document.getElementById("search").value.trim().toLowerCase();
+  const sort=document.getElementById("sort").value;
+
+  let visibleGroups=[...groups.values()].filter(group=>
+    group.label.toLowerCase().includes(query) ||
+    group.drops.some(drop=>drop.name.toLowerCase().includes(query))
+  );
+
+  const visibleQuantity=visibleGroups.reduce((n,g)=>n+g.quantity,0);
+  document.getElementById("resultCount").textContent=
+    visibleQuantity.toLocaleString()+" ITEMS";
+
+  const groupOrder=[
+    "Gildenscale Warrior Armors",
+    "Oathsworn Warrior Armors",
+    "Warrior Weapons",
+    "Gildenscale Mage Armors",
+    "Oathsworn Mage Armors",
+    "Mage Weapons",
+    "Gildenscale Guardian Armors",
+    "Oathsworn Guardian Armors",
+    "Other Loot"
+  ];
+
+  visibleGroups.sort((a,b)=>{
+    const ai=groupOrder.indexOf(a.key);
+    const bi=groupOrder.indexOf(b.key);
+    return (ai<0?999:ai)-(bi<0?999:bi);
+  });
+
+  let output="";
+
+  for(const group of visibleGroups){
+    const drops=[...group.drops];
+
+    drops.sort((a,b)=>{
+      if(sort==="damage"){
+        return b.damage-a.damage ||
+          (b.percent??-1)-(a.percent??-1);
+      }
+
+      if(sort==="newest"){
+        return new Date(b.timestamp)-new Date(a.timestamp);
+      }
+
+      return (b.percent??-1)-(a.percent??-1) ||
+        b.damage-a.damage;
+    });
+
+    const count=group.quantity;
+    const rolls=drops.length;
+
+    output+=`
+      <details class="group">
+        <summary>
+          <span class="group-icon">${group.icon}</span>
+          <span class="group-info">
+            <span class="group-name">${esc(group.label)}</span>
+            <span class="group-sub">${esc(group.subtitle)}</span>
+          </span>
+          <span class="group-count">${count} drops</span>
+          <span class="chevron">›</span>
+        </summary>
+        ${drops.map(drop=>{
+          const rarity=meta[drop.rarity];
+          const pct=drop.percent==null?"—":drop.percent+"%";
+          const potential=drop.potential||"No potential data";
+          return `
+            <div class="drop-row">
+              <div class="drop-main">
+                <div class="drop-title">${esc(drop.name)}</div>
+                <div class="drop-meta">
+                  <span class="pill rarity-pill" style="--rarity:${rarity.c}">${drop.rarity}</span>
+                  <span class="pill">${esc(drop.dungeon)}</span>
+                  <span class="pill">${esc(drop.boss)}</span>
+                  <span class="pill">${esc(time(drop.timestamp))}</span>
+                </div>
+              </div>
+              <div class="roll">
+                <div class="roll-percent">${pct}</div>
+                <span class="roll-damage">${esc(potential)}</span>
+                <span class="roll-qty">×${drop.quantity} obtained</span>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </details>
+    `;
+  }
+
+  document.getElementById("groups").innerHTML=output||
+    '<div class="empty">No matching drops found.</div>';
+
+  const latest=[...records]
+    .sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp))
+    .slice(0,5);
+
+  document.getElementById("recentRows").innerHTML=latest.length
+    ?latest.map(run=>`
+      <div class="drop-row">
+        <div class="drop-main">
+          <div class="drop-title">${esc(run.dungeon||"Dungeon run")}</div>
+          <div class="drop-meta">
+            <span class="pill">${esc(run.boss||"Boss unknown")}</span>
+            <span class="pill">${esc(time(run.timestamp))}</span>
+          </div>
+        </div>
+        <div class="roll">
+          <div class="roll-damage">${(run.items||[]).reduce((n,i)=>n+(Number(i.quantity)||1),0)} items</div>
+        </div>
+      </div>
+    `).join("")
+    :'<div class="empty">No activity yet.</div>';
+}
+
+async function refresh(){
+  try{
+    const response=await fetch("/api/drops");
+    if(!response.ok)throw Error("API "+response.status);
+
+    records=await response.json();
+    document.getElementById("status").textContent="Live feed";
+    render();
+  }catch(error){
+    document.getElementById("status").textContent="Offline";
+    console.error(error);
+  }
+}
+
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("sort").addEventListener("change",render);
+
+refresh();
+setInterval(refresh,15000);
+</script>
+</body>
+</html>
