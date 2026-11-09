@@ -1,0 +1,26 @@
+
+{
+  "name": "DQR Drops 2.0",
+  "short_name": "DQR Drops",
+  "description": "Dungeon Quest live drop tracker",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0714",
+  "theme_color": "#0b0714",
+  "icons": [
+    {
+      "src": "/icons/dqr-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/dqr-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
