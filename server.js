@@ -32,19 +32,92 @@ function writeDrops(rows) {
 }
 
 function clean(value) {
-  return String(value || "").replace(/\u0000/g, "").replace(/\r/g, "").trim();
+  return String(value || "")
+    .replace(/\u0000/g, "")
+    .replace(/\r/g, "")
+    .trim();
 }
 
 function stripMarkdown(value) {
   return clean(value)
-    .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/__(.*?)__/g, "$1")
-    .replace(/`(.*?)`/g, "$1")
-    .replace(/~~(.*?)~~/g, "$1");
+    .replace(/```[\w-]*\n?/g, "")
+    .replace(/\*\*(.*?)\*\*/gs, "$1")
+    .replace(/__(.*?)__/gs, "$1")
+    .replace(/\*(.*?)\*/gs, "$1")
+    .replace(/_(.*?)_/gs, "$1")
+    .replace(/`(.*?)`/gs, "$1")
+    .replace(/~~(.*?)~~/gs, "$1")
+    .replace(/\|\|(.*?)\|\|/gs, "$1");
+}
+
+// Extract readable text from Discord embeds and components.
+function extractObjectText(object) {
+  if (!object) return [];
+
+  if (typeof object.toJSON === "function") {
+    try {
+      object = object.toJSON();
+    } catch (_) {}
+  }
+
+  if (typeof object === "string") {
+    return [object];
+  }
+
+  if (Array.isArray(object)) {
+    return object.flatMap(extractObjectText);
+  }
+
+  if (typeof object !== "object") {
+    return [];
+  }
+
+  const allowedKeys = [
+    "title",
+    "description",
+    "name",
+    "value",
+    "content",
+    "label",
+    "placeholder",
+    "text",
+    "author",
+    "footer",
+    "fields",
+    "components",
+    "children"
+  ];
+
+  return allowedKeys.flatMap(key => {
+    if (object[key] === undefined || object[key] === null) {
+      return [];
+    }
+
+    return extractObjectText(object[key]);
+  });
+}
+
+function getMessageText(message) {
+  const parts = [];
+
+  if (message.content) {
+    parts.push(message.content);
+  }
+
+  for (const embed of message.embeds || []) {
+    parts.push(...extractObjectText(embed));
+  }
+
+  for (const component of message.components || []) {
+    parts.push(...extractObjectText(component));
+  }
+
+  return stripMarkdown(parts.filter(Boolean).join("\n"));
 }
 
 // NIGHTMARE ITEM CATALOG
-// Rarity comes from the Discord drop notification.
+// Rarity comes from the Discord notification,
+// except for the two Ultimate weapons.
 
 const ITEM_CATALOG = {
   "Oathsworn Halberd": {
@@ -111,12 +184,16 @@ const ITEM_CATALOG = {
 
 function getCatalogInfo(itemName) {
   const normalize = value =>
-    String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+    String(value)
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
 
   const target = normalize(itemName);
 
   for (const [name, info] of Object.entries(ITEM_CATALOG)) {
-    if (normalize(name) === target) return info;
+    if (normalize(name) === target) {
+      return info;
+    }
   }
 
   return {
@@ -126,29 +203,11 @@ function getCatalogInfo(itemName) {
 }
 
 function parseMessage(message) {
-  const embedTexts = (message.embeds || []).map(embed => {
-    const fields = (embed.fields || [])
-      .map(field => `${clean(field.name)}\n${clean(field.value)}`)
-      .join("\n");
+  const text = getMessageText(message);
 
-    return [
-      clean(embed.title),
-      clean(embed.description),
-      fields,
-      clean(embed.footer?.text)
-    ].filter(Boolean).join("\n");
-  });
-
-  const raw = [
-    clean(message.content),
-    ...embedTexts
-  ].filter(Boolean).join("\n\n");
-
-  if (!raw || !/dungeon quest|drops|boss|dungeon/i.test(raw)) {
+  if (!text || !/dungeon quest|drops|boss|dungeon/i.test(text)) {
     return [];
   }
-
-  const text = stripMarkdown(raw);
 
   const dungeon =
     (text.match(/^\s*Dungeon\s*:?\s+([^\n]+)/im) || [])[1] || "";
@@ -163,7 +222,7 @@ function parseMessage(message) {
   const items = [];
 
   const itemRegex =
-    /^\s*[⚪🔵🟢🟣🟡🔴🟠]?\s*([^,\n]+?)\s*,\s*(Ultimate|Legendary|Epic|Rare|Uncommon|Common)\s*[×x]\s*(\d+)(?:\s*,\s*pot\s*([\d.]+\s*[KMBT]?)\s*(spell|physical)\s*\((\d+)%\))?/gim;
+    /^\s*[-•>*]*\s*[⚪🔵🟢🟣🟡🔴🟠]?\s*([^,\n]+?)\s*,\s*(Ultimate|Legendary|Epic|Rare|Uncommon|Common)\s*[×x✕]\s*(\d+)(?:\s*,\s*pot\s*([\d.]+\s*[KMBT]?)\s*(spell|physical)\s*\((\d+)%\))?/gim;
 
   let match;
 
@@ -195,7 +254,9 @@ function parseMessage(message) {
 
   const id = message.id || `unknown-${Date.now()}`;
 
-  if (!items.length && !dungeon && !boss) return [];
+  if (!items.length && !dungeon && !boss) {
+    return [];
+  }
 
   return [{
     id: `${id}-0`,
@@ -248,28 +309,37 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
 
   async function ingest(message) {
     try {
+      if (message.partial) {
+        message = await message.fetch();
+      }
+
       const parsed = parseMessage(message);
 
-      if (!parsed.length) return;
+      console.log(
+        `Discord message ${message.id}: ` +
+        `${message.embeds?.length || 0} embeds, ` +
+        `${parsed.reduce((sum, record) => sum + record.items.length, 0)} items parsed`
+      );
+
+      if (!parsed.length) {
+        console.log("No drops recognized in this message.");
+        return;
+      }
 
       const existing = readDrops();
 
-      const known = new Set(
-        existing.map(record => record.id)
+      // Replace older versions of the same Discord message.
+      const updated = existing.filter(
+        record => record.discordMessageId !== message.id
       );
 
-      const added = parsed.filter(
-        record => !known.has(record.id)
+      writeDrops([...parsed, ...updated]);
+
+      console.log(
+        `DROP PARSED: ${parsed[0].dungeon || "Unknown dungeon"} | ` +
+        `${parsed[0].items.length} item entries`
       );
 
-      if (added.length) {
-        writeDrops([...added, ...existing]);
-
-        console.log(
-          `DROP PARSED: ${added[0].dungeon} | ` +
-          `${added[0].items.length} item entries`
-        );
-      }
     } catch (error) {
       console.error("Drop ingestion error:", error);
     }
@@ -307,6 +377,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
         `Backfill checked ${history.size} messages; ` +
         `added ${addedCount} drop records.`
       );
+
     } catch (error) {
       console.error("Backfill error:", error.message);
     }
@@ -320,10 +391,19 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
     }
   });
 
-  client.on("messageUpdate", (_oldMessage, message) => {
+  client.on("messageUpdate", async (_oldMessage, message) => {
     if (
       message.channelId === process.env.DISCORD_CHANNEL_ID
     ) {
+      if (message.partial) {
+        try {
+          message = await message.fetch();
+        } catch (error) {
+          console.error("Updated message fetch failed:", error.message);
+          return;
+        }
+      }
+
       ingest(message);
     }
   });
