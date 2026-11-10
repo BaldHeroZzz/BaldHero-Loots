@@ -1,669 +1,425 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#0b0714">
-<link rel="apple-touch-icon" href="/icons/dqr-icon-192.png">
-<title>DQR Drops 2.0</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090713">
+<title>DQR • Live Drops Preview</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#0b0714;
-  --panel:rgba(24,16,39,.82);
-  --line:rgba(177,119,255,.22);
-  --text:#f7f0ff;
-  --muted:#a99bbd;
-  --purple:#b66aff;
-  --cyan:#69e8e0;
-}
+:root{--bg:#090713;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#a879ff;--violet:#7445df;--muted:#9b93b5;--white:#f5f0ff;--green:#72e6b1;--gold:#ffc85c;--red:#ff596e;--pink:#e5a1ff}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  color:var(--text);
-  background:
-    radial-gradient(ellipse at 15% 0%,#47216d66,transparent 42%),
-    radial-gradient(ellipse at 95% 25%,#164d5860,transparent 38%),
-    radial-gradient(ellipse at 50% 100%,#38134d55,transparent 45%),
-    var(--bg);
-  font:14px/1.5 Inter,system-ui,sans-serif;
-  min-height:100vh;
-}
-body:before{
-  content:"";
-  position:fixed;
-  inset:-30%;
-  pointer-events:none;
-  z-index:-1;
-  background:
-    conic-gradient(from 180deg at 50% 50%,
-    transparent,#a34aff12,transparent,#43d9d012,transparent);
-  filter:blur(65px);
-  animation:shader 18s ease-in-out infinite alternate;
-}
-@keyframes shader{
-  from{transform:rotate(0deg) scale(1)}
-  to{transform:rotate(35deg) scale(1.12)}
-}
+body{margin:0;background:radial-gradient(ellipse at 50% -15%,#382064 0,transparent 42%),var(--bg);color:var(--white);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
 button,input{font:inherit}
-button{cursor:pointer}
-.wrap{max-width:960px;margin:auto;padding:18px 14px 100px}
-header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 2px 20px;
+button{cursor:pointer;color:inherit}
+.app{max-width:1180px;margin:auto;padding:22px 24px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#c39aff,#6334c8);display:grid;place-items:center;font-weight:1000;font-size:19px;box-shadow:0 0 28px #8e5cff66}
+.brand h1{font-size:19px;letter-spacing:2px;margin:0}
+.brand small{color:var(--muted);font-size:10px;letter-spacing:2px}
+.topright{display:flex;align-items:center;gap:9px}
+.livepill,.sound,.dots{border:1px solid var(--line);background:#171329;border-radius:12px;padding:10px 13px}
+.livepill{color:var(--green);font-size:11px;letter-spacing:1px}
+.livepill i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 9px var(--green)}
+.sound{color:#d9caff}
+.dots{font-size:20px;width:42px;height:42px;padding:0}
+.hero{border:1px solid #49336d;border-radius:22px;padding:25px 27px;background:linear-gradient(110deg,#201536 0%,#151127 55%,#24143b 100%);position:relative;overflow:hidden;box-shadow:0 18px 55px #0005}
+.hero:after{content:'DQR';position:absolute;right:24px;top:5px;font-size:100px;font-weight:1000;letter-spacing:-8px;color:#ffffff08;pointer-events:none}
+.eyebrow{color:#c6a7ff;font-size:10px;letter-spacing:2.5px;font-weight:800}
+.hero h2{font-size:clamp(25px,4vw,38px);line-height:1.1;margin:9px 0 8px;letter-spacing:-1px}
+.hero h2 span{background:linear-gradient(90deg,#fff,#c9a7ff,#8d62ff);-webkit-background-clip:text;color:transparent}
+.hero p{color:#b9afcf;margin:0;max-width:540px}
+.herofoot{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.chip{border:1px solid #554078;background:#ffffff08;color:#ded1ff;border-radius:9px;padding:7px 10px;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:17px 0 24px}
+.stat{border:1px solid var(--line);background:linear-gradient(145deg,#171329,#100e1c);border-radius:16px;padding:15px 17px}
+.stat label{color:var(--muted);font-size:10px;letter-spacing:1.4px;text-transform:uppercase}
+.stat strong{display:block;font-size:25px;margin-top:5px}
+.stat em{font-style:normal;color:#9f83df;font-size:10px}
+.toolbar{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 13px}
+.sectiontitle h3{font-size:18px;margin:0}
+.sectiontitle p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{border:1px solid var(--line);background:#151226;color:#b9afcf;border-radius:10px;padding:8px 11px;font-size:11px}
+.filter.active{background:#7046b8;border-color:#a87bff;color:white;box-shadow:0 0 17px #8f5bff33}
+.searchrow{display:flex;gap:9px;margin-bottom:14px}
+.search{flex:1;min-width:0;border:1px solid var(--line);background:#121020;border-radius:12px;padding:12px 14px;color:white;outline:none}
+.search:focus{border-color:#9c71f4;box-shadow:0 0 0 3px #9c71f422}
+.sort{border:1px solid var(--line);background:#121020;color:#d6c9ef;border-radius:12px;padding:0 12px}
+.feed{display:grid;gap:10px}
+.drop{--accent:var(--purple);border:1px solid #382c52;border-left:3px solid var(--accent);border-radius:15px;background:linear-gradient(100deg,#171329,#100e1b);padding:13px 15px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:13px;align-items:center;position:relative;overflow:hidden;animation:enter .55s cubic-bezier(.2,.8,.2,1) both;transition:transform .2s,border-color .2s}
+.drop:hover{transform:translateY(-2px);border-color:#7455a9}
+.drop:after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent,#ffffff08,transparent);transform:translateX(-120%);animation:sheen 1.1s ease .25s both;pointer-events:none}
+.drop.epic{--accent:#bd83ff;box-shadow:inset 0 0 28px #8c4dff0b}
+.drop.legendary{--accent:var(--gold);box-shadow:inset 0 0 30px #ffc85c0d}
+.drop.ultimate{--accent:var(--red);box-shadow:inset 0 0 35px #ff344a12}
+.itemicon{height:48px;width:48px;border-radius:13px;background:linear-gradient(145deg,#352354,#1a1530);border:1px solid #654c8c;display:grid;place-items:center;font-size:22px;box-shadow:inset 0 0 18px #b17aff22}
+.legendary .itemicon{border-color:#a77d37;background:linear-gradient(145deg,#49351a,#21182a)}
+.ultimate .itemicon{border-color:#913b4c;background:linear-gradient(145deg,#4b1729,#20101e)}
+.itemname{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:10px;margin-top:5px}
+.rarity{font-size:9px;font-weight:900;letter-spacing:1px;border-radius:6px;padding:4px 7px;background:#603a8e;color:#ead8ff}
+.legendary .rarity{background:#60471d;color:#ffe2a0}
+.ultimate .rarity{background:#681f34;color:#ffb4c0}
+.player{color:#d9caff}
+.right{text-align:right;white-space:nowrap}
+.rate{font-weight:800;color:#e6dcff}
+.time{font-size:10px;color:var(--muted);margin-top:5px}
+.tag{display:inline-block;font-size:9px;color:#c5b0ef;background:#ffffff0b;border:1px solid #ffffff12;border-radius:6px;padding:3px 6px;margin-top:5px}
+.dropbtn{border:1px solid #45365e;background:#201a33;border-radius:8px;padding:6px 8px;font-size:10px;color:#d9caff;margin-top:7px}
+.footnote{text-align:center;color:#77708f;font-size:10px;margin-top:18px}
+.menu{position:fixed;inset:0;background:#05040bc9;z-index:10;display:none;align-items:flex-start;justify-content:flex-end;padding:15px}
+.menu.open{display:flex}
+.menupanel{width:min(310px,100%);background:#171329;border:1px solid #4b3970;border-radius:18px;padding:16px;box-shadow:0 25px 70px #000b;animation:pop .2s ease}
+.menuhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.menuhead strong{letter-spacing:1px}
+.close{background:none;border:0;font-size:22px;color:#bdb0d8}
+.menuitem{display:block;width:100%;text-align:left;padding:12px;border:0;border-radius:10px;background:transparent;color:#d9d0ed;margin:3px 0}
+.menuitem:hover,.menuitem.selected{background:#30234b;color:#fff}
+.menuitem span{float:right;color:#9585b4;font-size:10px}
+.toast{position:fixed;right:18px;bottom:18px;z-index:5;background:#201933;border:1px solid #9c70ed;border-radius:13px;padding:13px 16px;box-shadow:0 10px 35px #0009;transform:translateY(130%);transition:.35s;max-width:320px}
+.toast.show{transform:translateY(0)}
+.toast b{color:#d5baff}
+.empty{text-align:center;padding:35px;color:var(--muted);border:1px dashed #493a62;border-radius:14px}
+.modal{position:fixed;inset:0;display:none;place-items:center;background:#05040bd9;z-index:12;padding:20px}
+.modal.open{display:grid}
+.modalbox{max-width:420px;width:100%;background:#19142a;border:1px solid #5c4386;border-radius:18px;padding:22px;box-shadow:0 20px 70px #000b}
+.modalbox h3{margin:0 0 5px}
+.modalbox p{color:#b5a9cb}
+.modalbox button{background:#7046b8;border:0;border-radius:9px;padding:9px 14px}
+.previewlabel{position:fixed;left:12px;bottom:12px;z-index:4;color:#bca9e7;background:#201a30;border:1px solid #4d3b6d;border-radius:8px;padding:6px 9px;font-size:9px;letter-spacing:1px}
+@keyframes enter{from{opacity:0;transform:translateY(17px) scale(.985);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes sheen{to{transform:translateX(120%)}}
+@keyframes pop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:inset 0 0 28px #8c4dff0b}50%{box-shadow:inset 0 0 35px #8c4dff22}}
+.epic{animation:enter .55s ease both,pulse 3s ease-in-out 1s infinite}
+.legendary{animation:enter .55s ease both,goldpulse 2.7s ease-in-out 1s infinite}
+.ultimate{animation:enter .55s ease both,redpulse 2.2s ease-in-out 1s infinite}
+@keyframes goldpulse{50%{box-shadow:inset 0 0 32px #ffc85c18,0 0 12px #ffc85c0c}}
+@keyframes redpulse{50%{box-shadow:inset 0 0 36px #ff344a22,0 0 14px #ff344a12}}
+@media(max-width:700px){
+.app{padding:15px 13px 45px}
+.top{margin-bottom:16px}
+.brand h1{font-size:16px}
+.hero{padding:21px 18px}
+.hero:after{font-size:70px;right:10px;top:15px}
+.stats{grid-template-columns:repeat(2,1fr);gap:9px}
+.stat{padding:12px}
+.stat strong{font-size:22px}
+.toolbar{display:block}
+.filters{margin-top:12px}
+.searchrow{margin-top:13px}
+.drop{grid-template-columns:42px minmax(0,1fr) auto;padding:11px 10px;gap:9px}
+.itemicon{width:42px;height:42px}
+.itemname{font-size:12px}
+.right .rate{font-size:11px}
+.dropbtn{padding:5px 6px}
+.livepill{padding:9px;font-size:9px}
+.sound{padding:9px}
+.hero p{font-size:12px}
 }
-.brand{display:flex;align-items:center;gap:11px}
-.logo{
-  width:44px;height:44px;border-radius:14px;
-  display:grid;place-items:center;
-  background:linear-gradient(140deg,#d18aff,#6527b9);
-  font-size:19px;font-weight:1000;
-  box-shadow:0 0 28px #a65cff66;
-}
-.brand strong{display:block;letter-spacing:1.5px;font-size:17px}
-.brand small{display:block;color:var(--muted);font-size:10px}
-.live{
-  color:var(--cyan);font-size:10px;
-  border:1px solid #286d65;background:#102b2aaa;
-  border-radius:30px;padding:7px 11px;
-}
-.hero{
-  position:relative;overflow:hidden;
-  padding:24px 20px;border:1px solid #8d55b855;
-  border-radius:23px;
-  background:linear-gradient(120deg,#32194dcc,#171025e8 60%,#102a32cc);
-  box-shadow:0 15px 45px #0006,inset 0 1px #ffffff12;
-}
-.hero:after{
-  content:"";position:absolute;width:190px;height:190px;
-  right:-60px;top:-100px;border-radius:50%;
-  background:#bd73ff30;filter:blur(30px);
-}
-.eyebrow{
-  color:var(--cyan);font-size:10px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;
-}
-.hero h1{font-size:30px;line-height:1.08;margin:9px 0}
-.hero h1 span{color:#d29aff;text-shadow:0 0 24px #b66aff70}
-.hero p{color:#c6b8d6;font-size:12px;margin:0;max-width:430px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0}
-.stat,.panel{
-  border:1px solid var(--line);
-  background:linear-gradient(145deg,#211631dd,#110d1beF);
-  box-shadow:0 10px 30px #0003,inset 0 1px #ffffff09;
-  backdrop-filter:blur(12px);
-}
-.stat{border-radius:15px;padding:13px 11px;min-width:0}
-.stat span{display:block;color:var(--muted);font-size:10px}
-.stat b{display:block;font-size:22px;margin-top:3px;overflow:hidden;text-overflow:ellipsis}
-.panel{border-radius:19px;margin-top:14px;overflow:hidden}
-.panelhead{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:15px 15px 12px;gap:8px;
-}
-.panelhead h2{font-size:15px;margin:0}
-.panelhead small{font-size:10px;color:var(--muted)}
-.rarity-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:8px;padding:0 12px 13px;
-}
-.rarity-card{
-  border:1px solid color-mix(in srgb,var(--rarity) 55%,transparent);
-  background:linear-gradient(145deg,color-mix(in srgb,var(--rarity) 13%,#171020),#110d19);
-  border-radius:13px;padding:10px 7px;text-align:center;
-}
-.rarity-card .symbol{font-size:18px;color:var(--rarity)}
-.rarity-card b{display:block;color:var(--rarity);font-size:11px}
-.rarity-card strong{display:block;font-size:20px}
-.rarity-card small{color:var(--muted);font-size:9px}
-.toolbar{display:flex;gap:8px;padding:0 12px 12px}
-.toolbar input,.toolbar select{
-  min-width:0;width:100%;color:var(--text);
-  background:#0e0a17;border:1px solid var(--line);
-  border-radius:11px;padding:11px 12px;font-size:12px;
-  outline:none;
-}
-.toolbar input{flex:1.5}
-.toolbar select{flex:1}
-.tabs{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;padding:0 12px 13px;
-}
-.tab{
-  position:relative;overflow:hidden;
-  border:1px solid #49335e;border-radius:12px;
-  padding:12px 9px;text-align:left;
-  color:#c8b9d9;background:linear-gradient(140deg,#21162f,#130e1c);
-  transition:.2s ease;
-}
-.tab strong{display:block;font-size:11px}
-.tab small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.tab.active{
-  border-color:#bd7aff;
-  color:#fff;
-  background:linear-gradient(130deg,#512b78,#211531);
-  box-shadow:0 0 18px #a65cff35,inset 0 0 16px #bd7aff12;
-}
-.tab.active:after{
-  content:"";position:absolute;right:-25px;top:-35px;
-  width:75px;height:75px;border-radius:50%;
-  background:#d69cff30;filter:blur(15px);
-}
-.tab:last-child{grid-column:1/-1}
-.tab-count{float:right;color:#d7b5ff;font-size:10px}
-.sortline{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 14px 10px;color:var(--muted);font-size:10px;
-}
-.rarity-heading{
-  display:flex;align-items:center;gap:8px;
-  padding:12px 14px 7px;
-  color:var(--rarity);font-size:12px;font-weight:900;
-  letter-spacing:.5px;
-}
-.rarity-heading:after{content:"";height:1px;flex:1;background:color-mix(in srgb,var(--rarity) 30%,transparent)}
-.item-row{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;
-  gap:10px;align-items:center;padding:12px 13px;
-  border-top:1px solid #30223e;
-  background:#ffffff02;
-}
-.item-row b{display:block;font-size:12px;overflow-wrap:anywhere}
-.item-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.item-right{text-align:right;min-width:82px}
-.rarity-pill{
-  display:inline-block;border:1px solid var(--rarity);
-  color:var(--rarity);background:color-mix(in srgb,var(--rarity) 12%,transparent);
-  border-radius:20px;padding:3px 7px;font-size:9px;font-weight:800;
-}
-.percent{
-  display:block;color:#82e9c5;font-weight:900;font-size:14px;margin-top:4px;
-}
-.potential{color:#c5a5ff!important}
-.qty{color:#fff;font-size:11px;font-weight:800}
-.empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:12px}
-.note{padding:12px 15px;color:var(--muted);font-size:10px;text-align:center}
-.finished{
-  margin:0 12px 13px;border:1px solid #49c9a455;
-  border-radius:15px;overflow:hidden;
-  background:linear-gradient(135deg,#153b36aa,#151020dd);
-  box-shadow:0 0 23px #35d6a111;
-}
-.finished-top{padding:13px 13px 10px;border-bottom:1px solid #49c9a433}
-.finished-label{
-  color:#7af0c5;font-size:9px;font-weight:900;
-  letter-spacing:1.6px;text-transform:uppercase;
-}
-.finished h3{font-size:18px;margin:5px 0 2px}
-.finished-meta{color:#b5c9c3;font-size:10px}
-.finished-result{
-  padding:10px 13px;color:#9df0ce;font-size:11px;
-}
-.finished-items{padding:0 12px 10px}
-.finished-item{
-  display:flex;justify-content:space-between;gap:8px;
-  padding:7px 0;border-top:1px solid #ffffff10;font-size:11px;
-}
-.finished-item small{color:var(--muted);text-align:right}
-.bottom{
-  position:fixed;bottom:0;left:0;right:0;z-index:5;
-  padding:10px 15px calc(10px + env(safe-area-inset-bottom));
-  background:#100b1df2;border-top:1px solid #34234b;
-  backdrop-filter:blur(16px);
-}
-.bottom nav{width:min(600px,100%);margin:auto;display:flex;justify-content:space-around}
-.bottom a{color:var(--muted);font-size:10px;text-decoration:none;text-align:center}
-.bottom a span{display:block;font-size:18px;margin-bottom:2px}
-.bottom a.active{color:#d09aff}
-@media(min-width:650px){
-  .wrap{padding-top:28px}
-  .hero{padding:29px}
-  .hero h1{font-size:37px}
-  .rarity-grid{grid-template-columns:repeat(6,1fr)}
-  .tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
-  .tab:last-child{grid-column:auto}
-  .stat{padding:16px}
+@media(prefers-reduced-motion:reduce){
+*,*:before,*:after{animation:none!important;transition:none!important}
 }
 </style>
 </head>
-
 <body>
-<main class="wrap">
-
-<header>
-  <div class="brand">
-    <div class="logo">DQ</div>
-    <div>
-      <strong>DQR <span style="color:#c58aff">DROPS 2.0</span></strong>
-      <small>Dungeon Quest loot tracker</small>
-    </div>
-  </div>
-  <div class="live" id="status">Connecting...</div>
+<main class="app">
+<header class="top">
+<div class="brand">
+<div class="logo">D</div>
+<div>
+<h1>DQR <span style="color:#a879ff">DROPS</span></h1>
+<small>DUNGEON RUN TRACKER</small>
+</div>
+</div>
+<div class="topright">
+<div class="livepill"><i></i> LIVE PREVIEW</div>
+<button class="sound" id="soundBtn" title="Enable notification sounds">♫ SOUND OFF</button>
+<button class="dots" id="menuBtn" aria-label="Open menu">⋮</button>
+</div>
 </header>
 
 <section class="hero">
-  <div class="eyebrow">✦ Discord drop database</div>
-  <h1>Every drop.<br><span>Counted & sorted.</span></h1>
-  <p>Your dungeon loot collection, organized by equipment type, rarity, and drop percentage.</p>
+<div class="eyebrow">✦ REAL-TIME DROP INTELLIGENCE</div>
+<h2>THE HUNT <span>NEVER STOPS.</span></h2>
+<p>Every run. Every drop. One live feed. Track rare loot as it lands and never miss a legendary pull.</p>
+<div class="herofoot">
+<span class="chip">◈ AUTO UPDATES · 3 SEC</span>
+<span class="chip">✧ RARITY ANIMATIONS</span>
+<span class="chip">♫ RARE DROP ALERTS</span>
+</div>
 </section>
 
 <section class="stats">
-  <div class="stat"><span>Total item drops</span><b id="totalDrops">—</b></div>
-  <div class="stat"><span>Unique items</span><b id="uniqueItems">—</b></div>
-  <div class="stat"><span>Runs recorded</span><b id="totalRuns">—</b></div>
+<div class="stat">
+<label>Today's drops</label>
+<strong id="todayCount">128</strong>
+<em>↗ RUN ACTIVITY</em>
+</div>
+<div class="stat">
+<label>Legendary</label>
+<strong style="color:var(--gold)">07</strong>
+<em>✦ RARE FINDS</em>
+</div>
+<div class="stat">
+<label>Ultimate</label>
+<strong style="color:var(--red)">02</strong>
+<em>◆ MYTHIC TIER</em>
+</div>
+<div class="stat">
+<label>Live status</label>
+<strong style="color:var(--green);font-size:19px">ONLINE</strong>
+<em>● FEED CONNECTED*</em>
+</div>
 </section>
 
-<section class="panel" id="rarityPanel">
-  <div class="panelhead">
-    <h2>✦ Rarity breakdown</h2>
-    <small>ITEM QUANTITY</small>
-  </div>
-  <div class="rarity-grid" id="rarityGrid"></div>
-</section>
-
-<section class="panel" id="inventoryPanel">
-  <div class="panelhead">
-    <h2>▣ Loot Collection</h2>
-    <small id="resultCount">0 DROPS</small>
-  </div>
-
-  <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="war">
-      <strong>⚔ Gildenscale War Stuff</strong>
-      <small>Warrior equipment <span class="tab-count" id="count-war">0</span></small>
-    </button>
-    <button class="tab" data-tab="mage">
-      <strong>✧ Gildenscale Mage Stuff</strong>
-      <small>Mage equipment <span class="tab-count" id="count-mage">0</span></small>
-    </button>
-    <button class="tab" data-tab="legendary">
-      <strong>★ Legendary Drops</strong>
-      <small>Legendary rarity <span class="tab-count" id="count-legendary">0</span></small>
-    </button>
-    <button class="tab" data-tab="ultimate">
-      <strong>♛ Ultimate Drop</strong>
-      <small>Ultimate rarity <span class="tab-count" id="count-ultimate">0</span></small>
-    </button>
-    <button class="tab" data-tab="trash">
-      <strong>▣ Trash Bin</strong>
-      <small>All other loot <span class="tab-count" id="count-trash">0</span></small>
-    </button>
-  </div>
-
-  <div class="toolbar">
-    <input id="search" type="search" placeholder="Search items..." autocomplete="off">
-    <select id="sort">
-      <option value="default">Rarity + percentage</option>
-      <option value="damage">Rarity + damage</option>
-      <option value="newest">Newest first</option>
-    </select>
-  </div>
-
-  <div class="sortline">
-    <span id="sortDescription">Rarity first · Highest percentage first</span>
-    <span>LIVE COLLECTION</span>
-  </div>
-
-  <div id="groups">
-    <div class="empty">Waiting for Discord drop records...</div>
-  </div>
-
-  <div class="note">Drops are updated automatically from your connected Discord channel.</div>
-</section>
-
-<section class="panel" id="latestRun">
-  <div class="panelhead">
-    <h2>✦ Most Recent Finished Dungeon</h2>
-    <small>ONE RUN ONLY</small>
-  </div>
-  <div id="finishedRun" class="empty">Waiting for a completed dungeon run...</div>
-</section>
-
-</main>
-
-<div class="bottom">
-  <nav>
-    <a class="active" href="#rarityPanel"><span>⌂</span>Overview</a>
-    <a href="#inventoryPanel"><span>▦</span>Loot</a>
-    <a href="#latestRun"><span>✦</span>Latest Finish</a>
-  </nav>
+<div class="toolbar">
+<div class="sectiontitle">
+<h3>✦ Latest Drops</h3>
+<p>Newest drops appear first · sample preview entries</p>
+</div>
+<div class="filters">
+<button class="filter active" data-filter="all">ALL</button>
+<button class="filter" data-filter="epic">PURPLE</button>
+<button class="filter" data-filter="legendary">LEGENDARY</button>
+<button class="filter" data-filter="ultimate">ULTIMATE</button>
+</div>
 </div>
 
-<script>
-const rarityOrder=["Ultimate","Legendary","Epic","Rare","Uncommon","Common"];
+<div class="searchrow">
+<input class="search" id="search" placeholder="⌕  Search item or player...">
+<select class="sort" id="sort">
+<option value="new">Newest first</option>
+<option value="rate">Drop rate</option>
+</select>
+</div>
 
-const meta={
-  Ultimate:{c:"#ff625e",s:"♛"},
-  Legendary:{c:"#ffca55",s:"★"},
-  Epic:{c:"#bd83ff",s:"✦"},
-  Rare:{c:"#55b9ff",s:"◆"},
-  Uncommon:{c:"#83d66f",s:"●"},
-  Common:{c:"#c6cbd5",s:"●"}
-};
+<section class="feed" id="feed">
+<article class="drop ultimate" data-rarity="ultimate" data-name="Lumenflames Judgement" data-player="BaldHero">
+<div class="itemicon">⚔</div>
+<div>
+<div class="itemname">Lumenflames Judgement</div>
+<div class="meta">
+<span class="rarity">ULTIMATE</span>
+<span class="player">BaldHero</span><span>•</span><span>Gildenscale Warrior</span>
+</div>
+</div>
+<div class="right">
+<div class="rate">0.02%</div>
+<div class="time">JUST NOW</div>
+<button class="dropbtn">DETAILS</button>
+</div>
+</article>
 
-const tabs=["war","mage","legendary","ultimate","trash"];
-let records=[];
-let activeTab="war";
+<article class="drop legendary" data-rarity="legendary" data-name="Guardian Oathasorn" data-player="Waffle_Saitama">
+<div class="itemicon">🛡</div>
+<div>
+<div class="itemname">Guardian Oathasorn</div>
+<div class="meta">
+<span class="rarity">LEGENDARY</span>
+<span class="player">Waffle_Saitama</span><span>•</span><span>Gildenscale Warrior</span>
+</div>
+</div>
+<div class="right">
+<div class="rate">0.15%</div>
+<div class="time">2 MIN AGO</div>
+<button class="dropbtn">DETAILS</button>
+</div>
+</article>
 
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
+<article class="drop epic" data-rarity="epic" data-name="Gildenscale Greatsword" data-player="Aintgotmelol">
+<div class="itemicon">⚔</div>
+<div>
+<div class="itemname">Gildenscale Greatsword</div>
+<div class="meta">
+<span class="rarity">PURPLE · EPIC</span>
+<span class="player">Aintgotmelol</span><span>•</span><span>Gildenscale Warrior</span>
+</div>
+</div>
+<div class="right">
+<div class="rate">1.25%</div>
+<div class="time">4 MIN AGO</div>
+<button class="dropbtn">DETAILS</button>
+</div>
+</article>
 
-const time=v=>{
-  try{return new Date(v).toLocaleString()}
-  catch{return ""}
-};
+<article class="drop epic" data-rarity="epic" data-name="Gildenscale Arcane Robe" data-player="KiroZen">
+<div class="itemicon">✧</div>
+<div>
+<div class="itemname">Gildenscale Arcane Robe</div>
+<div class="meta">
+<span class="rarity">PURPLE · EPIC</span>
+<span class="player">KiroZen</span><span>•</span><span>Gildenscale Mage</span>
+</div>
+</div>
+<div class="right">
+<div class="rate">2.10%</div>
+<div class="time">7 MIN AGO</div>
+<button class="dropbtn">DETAILS</button>
+</div>
+</article>
 
-function damageNumber(value){
-  if(!value)return 0;
-  const m=String(value).match(/([\d.]+)\s*([KMBT]?)/i);
-  if(!m)return 0;
-  const multipliers={K:1e3,M:1e6,B:1e9,T:1e12};
-  return Number(m[1])*(multipliers[(m[2]||"").toUpperCase()]||1);
-}
+<article class="drop" data-rarity="normal" data-name="Ancient Scale Fragment" data-player="Mika">
+<div class="itemicon">◇</div>
+<div>
+<div class="itemname">Ancient Scale Fragment</div>
+<div class="meta">
+<span class="rarity" style="background:#353044;color:#c9c2d9">COMMON</span>
+<span class="player">Mika</span><span>•</span><span>Gildenscale Warrior</span>
+</div>
+</div>
+<div class="right">
+<div class="rate">18.5%</div>
+<div class="time">9 MIN AGO</div>
+<button class="dropbtn">DETAILS</button>
+</div>
+</article>
+</section>
 
-function getItems(){
-  const list=[];
-  for(const run of records){
-    for(const item of run.items||[]){
-      const name=String(item.name||"").trim();
-      if(!name)continue;
-      list.push({
-        ...item,
-        name,
-        rarity:meta[item.rarity]?item.rarity:"Common",
-        dungeon:run.dungeon||"Unknown dungeon",
-        boss:run.boss||"Unknown boss",
-        timestamp:run.timestamp,
-        accounts:run.accounts,
-        messageId:run.discordMessageId||run.id
-      });
-    }
-  }
-  return list;
-}
+<div class="footnote">* PREVIEW MODE — SAMPLE DROPS ONLY. LIVE WEBSITE WILL LOAD YOUR EXISTING /api/drops DATA.</div>
+</main>
 
-function categoryFor(item){
-  const name=item.name.toLowerCase();
-  const category=String(item.category||"").toLowerCase();
+<div class="menu" id="menu">
+<div class="menupanel">
+<div class="menuhead">
+<strong>DQR NAVIGATION</strong>
+<button class="close" id="closeMenu">×</button>
+</div>
+<button class="menuitem selected">◈ Live Drops <span>HOME</span></button>
+<button class="menuitem">▦ Old Loot Database</button>
+<button class="menuitem">⚔ Gildenscale Warrior Stuff</button>
+<button class="menuitem">✧ Gildenscale Mage Stuff</button>
+<button class="menuitem">★ Legendary Drops</button>
+<button class="menuitem">◆ Ultimate Drop</button>
+<button class="menuitem">▤ Trash Bin</button>
+<button class="menuitem">◷ Statistics</button>
+<button class="menuitem">♡ Favorites</button>
+</div>
+</div>
 
-  const isGildenscale=name.includes("gildenscale");
+<div class="toast" id="toast">
+<b>✦ RARE DROP DETECTED</b><br>
+<span id="toastText">A new item has appeared.</span>
+</div>
 
-  if(isGildenscale && (
-    category.includes("warrior") ||
-    name.includes("warrior") ||
-    name.includes("oath and aegis")
-  ))return "war";
+<div class="modal" id="modal">
+<div class="modalbox">
+<h3 id="modalTitle">Drop details</h3>
+<p id="modalText"></p>
+<button id="modalClose">Close</button>
+</div>
+</div>
 
-  if(isGildenscale && (
-    category.includes("mage") ||
-    name.includes("mage")
-  ))return "mage";
-
-  if(item.rarity==="Ultimate")return "ultimate";
-  if(item.rarity==="Legendary")return "legendary";
-
-  return "trash";
-}
-
-function sortItems(items){
-  const mode=document.getElementById("sort").value;
-
-  return items.sort((a,b)=>{
-    if(mode==="newest"){
-      return new Date(b.timestamp)-new Date(a.timestamp);
-    }
-
-    const rarityDifference=
-      rarityOrder.indexOf(a.rarity)-rarityOrder.indexOf(b.rarity);
-
-    if(rarityDifference!==0)return rarityDifference;
-
-    if(mode==="damage"){
-      return damageNumber(b.potential)-damageNumber(a.potential)
-        || (Number(b.percent)||0)-(Number(a.percent)||0);
-    }
-
-    const percentA=a.percent==null?-1:Number(a.percent);
-    const percentB=b.percent==null?-1:Number(b.percent);
-
-    return percentB-percentA
-      || damageNumber(b.potential)-damageNumber(a.potential);
-  });
-}
-
-function renderRarity(all){
-  const counts=Object.fromEntries(
-    rarityOrder.map(r=>[
-      r,all.filter(x=>x.rarity===r)
-        .reduce((n,x)=>n+(Number(x.quantity)||1),0)
-    ])
-  );
-
-  document.getElementById("rarityGrid").innerHTML=
-    rarityOrder.map(r=>`
-      <div class="rarity-card" style="--rarity:${meta[r].c}">
-        <div class="symbol">${meta[r].s}</div>
-        <b>${r}</b>
-        <strong>${counts[r].toLocaleString()}</strong>
-        <small>items</small>
-      </div>
-    `).join("");
-}
-
-function renderTabs(all){
-  for(const tab of tabs){
-    const count=all.filter(x=>categoryFor(x)===tab)
-      .reduce((n,x)=>n+(Number(x.quantity)||1),0);
-    document.getElementById("count-"+tab).textContent=count.toLocaleString();
-  }
-}
-
-function renderLoot(all){
-  const query=document.getElementById("search").value.trim().toLowerCase();
-  const filtered=all.filter(x=>
-    categoryFor(x)===activeTab &&
-    (
-      x.name.toLowerCase().includes(query) ||
-      x.dungeon.toLowerCase().includes(query) ||
-      x.boss.toLowerCase().includes(query)
-    )
-  );
-
-  const sorted=sortItems(filtered);
-  document.getElementById("resultCount").textContent=
-    sorted.reduce((n,x)=>n+(Number(x.quantity)||1),0).toLocaleString()+" DROPS";
-
-  document.getElementById("sortDescription").textContent=
-    document.getElementById("sort").value==="damage"
-    ?"Rarity first · Highest damage first"
-    :document.getElementById("sort").value==="newest"
-    ?"Newest drop first"
-    :"Rarity first · Highest percentage first";
-
-  if(!sorted.length){
-    document.getElementById("groups").innerHTML=
-      '<div class="empty">No drops in this tab yet.</div>';
-    return;
-  }
-
-  let html="";
-
-  for(const rarity of rarityOrder){
-    const rows=sorted.filter(x=>x.rarity===rarity);
-    if(!rows.length)continue;
-
-    html+=`<div class="rarity-heading" style="--rarity:${meta[rarity].c}">
-      ${meta[rarity].s} ${rarity}
-    </div>`;
-
-    html+=rows.map(item=>`
-      <div class="item-row">
-        <div>
-          <b>${esc(item.name)}</b>
-          <small>${esc(item.dungeon)} · ${esc(item.boss)}</small>
-          <small>${esc(time(item.timestamp))} · ×${Number(item.quantity)||1}</small>
-          ${item.potential?`<small class="potential">⚡ ${esc(item.potential)}</small>`:""}
-        </div>
-        <div class="item-right">
-          <span class="rarity-pill" style="--rarity:${meta[rarity].c}">${rarity}</span>
-          ${item.percent!=null?`<span class="percent">${esc(item.percent)}%</span>`:""}
-          <span class="qty">×${Number(item.quantity)||1}</span>
-        </div>
-      </div>
-    `).join("");
-  }
-
-  document.getElementById("groups").innerHTML=html;
-}
-
-function getFinishedRun(){
-  const completed=[];
-
-  for(const run of records){
-    const raw=String(run.rawText||"");
-
-    const sessionMatch=raw.match(
-      /(?:^|\n)\s*Session\s*:?\s*([\s\S]*?)(?=\n\s*All time\b|$)/i
-    );
-
-    if(!sessionMatch)continue;
-
-    const sessionText=sessionMatch[1];
-    const lines=sessionText.split(/\n/);
-
-    const completedLine=lines.find(line=>{
-      const match=line.match(/(\d+)\s*\/\s*(\d+)\s*cleared/i);
-      return match && Number(match[1])===Number(match[2]);
-    });
-
-    if(completedLine){
-      completed.push({run,line:completedLine.trim()});
-    }
-  }
-
-  completed.sort((a,b)=>
-    new Date(b.run.timestamp)-new Date(a.run.timestamp)
-  );
-
-  return completed[0]||null;
-}
-
-function renderFinishedRun(){
-  const latest=getFinishedRun();
-  const container=document.getElementById("finishedRun");
-
-  if(!latest){
-    container.innerHTML=
-      '<div class="empty">No confirmed finished dungeon run found yet.<br>It will appear here when Sottoro reports a completed clear.</div>';
-    return;
-  }
-
-  const run=latest.run;
-  const items=run.items||[];
-  const total=items.reduce((n,x)=>n+(Number(x.quantity)||1),0);
-
-  container.innerHTML=`
-    <div class="finished">
-      <div class="finished-top">
-        <div class="finished-label">✓ Latest completed run</div>
-        <h3>${esc(run.dungeon||"Finished Dungeon")}</h3>
-        <div class="finished-meta">
-          Boss: ${esc(run.boss||"Unknown")}<br>
-          ${run.accounts?esc(run.accounts)+" account(s) · ":""}
-          ${esc(time(run.timestamp))}
-        </div>
-      </div>
-      <div class="finished-result">
-        ✓ ${esc(latest.line)} · ${total} item(s) recorded
-      </div>
-      <div class="finished-items">
-        ${items.length?items.map(item=>`
-          <div class="finished-item">
-            <span>${esc(item.name)} ×${Number(item.quantity)||1}</span>
-            <small>${esc(item.rarity||"Common")}${item.percent!=null?" · "+esc(item.percent)+"%":""}</small>
-          </div>
-        `).join(""):'<div class="empty">No item drops recorded for this run.</div>'}
-      </div>
-    </div>
-  `;
-}
-
-function render(){
-  const all=getItems();
-
-  const total=all.reduce((n,x)=>n+(Number(x.quantity)||1),0);
-  const unique=new Set(all.map(x=>x.rarity+"::"+x.name.toLowerCase()));
-
-  document.getElementById("totalDrops").textContent=total.toLocaleString();
-  document.getElementById("uniqueItems").textContent=unique.size.toLocaleString();
-  document.getElementById("totalRuns").textContent=records.length.toLocaleString();
-
-  renderRarity(all);
-  renderTabs(all);
-  renderLoot(all);
-  renderFinishedRun();
-}
-
-async function refresh(){
-  try{
-    const response=await fetch("/api/drops",{cache:"no-store"});
-    if(!response.ok)throw new Error("API "+response.status);
-
-    const data=await response.json();
-    records=Array.isArray(data)?data:[];
-    document.getElementById("status").textContent="● Live feed";
-    render();
-  }catch(error){
-    document.getElementById("status").textContent="Offline";
-    console.error("Drop refresh error:",error);
-  }
-}
-
-document.getElementById("tabs").addEventListener("click",event=>{
-  const button=event.target.closest("[data-tab]");
-  if(!button)return;
-
-  activeTab=button.dataset.tab;
-
-  document.querySelectorAll(".tab").forEach(tab=>
-    tab.classList.toggle("active",tab===button)
-  );
-
-  render();
-});
-
-document.getElementById("search").addEventListener("input",render);
-document.getElementById("sort").addEventListener("change",render);
-
-document.querySelectorAll(".bottom a").forEach(link=>{
-  link.addEventListener("click",()=>{
-    document.querySelectorAll(".bottom a").forEach(x=>x.classList.remove("active"));
-    link.classList.add("active");
-  });
-});
-
-refresh();
-setInterval(refresh,15000);
-</script>
+<div class="previewlabel">DESIGN PREVIEW · NOT CONNECTED TO LIVE DATA</div>
 
 <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
-      .then(registration => {
-        console.log("DQR App Service Worker registered!");
-      })
-      .catch(error => {
-        console.error("Service Worker registration failed:", error);
-      });
-  });
-}
-</script>
+const feed=document.getElementById('feed');
+let active='all',soundOn=false,audioCtx=null;
+const soundBtn=document.getElementById('soundBtn');
 
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');
+ active=b.dataset.filter;
+ filterCards();
+}));
+
+function filterCards(){
+ const q=document.getElementById('search').value.toLowerCase();
+ [...feed.children].forEach(c=>{
+  const ok=(active==='all'||c.dataset.rarity===active)&&
+  ((c.dataset.name+' '+c.dataset.player).toLowerCase().includes(q));
+  c.style.display=ok?'grid':'none';
+ });
+}
+
+document.getElementById('search').addEventListener('input',filterCards);
+
+document.getElementById('sort').addEventListener('change',e=>{
+ const cards=[...feed.children];
+ if(e.target.value==='rate'){
+  cards.sort((a,b)=>parseFloat(a.querySelector('.rate').textContent)-parseFloat(b.querySelector('.rate').textContent));
+ }else{
+  cards.sort((a,b)=>Number(a.dataset.order||0)-Number(b.dataset.order||0));
+ }
+ cards.forEach(c=>feed.appendChild(c));
+});
+
+function beep(freq=740){
+ try{
+  audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type='sine';
+  o.frequency.value=freq;
+  g.gain.setValueAtTime(.0001,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.12,audioCtx.currentTime+.025);
+  g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.32);
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start();
+  o.stop(audioCtx.currentTime+.34);
+ }catch(e){}
+}
+
+soundBtn.addEventListener('click',()=>{
+ soundOn=!soundOn;
+ soundBtn.textContent=soundOn?'♫ SOUND ON':'♫ SOUND OFF';
+ if(soundOn)beep(740);
+});
+
+function notify(name,rarity){
+ const toast=document.getElementById('toast');
+ document.getElementById('toastText').textContent=name+' · '+rarity.toUpperCase();
+ toast.classList.add('show');
+ setTimeout(()=>toast.classList.remove('show'),3300);
+ if(soundOn)beep(rarity==='ultimate'?420:rarity==='legendary'?620:800);
+}
+
+feed.addEventListener('click',e=>{
+ const card=e.target.closest('.drop');
+ if(!card)return;
+ document.getElementById('modalTitle').textContent=card.dataset.name;
+ document.getElementById('modalText').textContent=
+ 'Player: '+card.dataset.player+
+ ' · Rarity: '+card.dataset.rarity.toUpperCase()+
+ ' · Drop rate: '+card.querySelector('.rate').textContent+
+ '\n\nThis is sample preview information.';
+ document.getElementById('modal').classList.add('open');
+});
+
+document.getElementById('modalClose').onclick=()=>{
+ document.getElementById('modal').classList.remove('open');
+};
+
+document.getElementById('modal').onclick=e=>{
+ if(e.target.id==='modal')e.currentTarget.classList.remove('open');
+};
+
+const menu=document.getElementById('menu');
+document.getElementById('menuBtn').onclick=()=>menu.classList.add('open');
+document.getElementById('closeMenu').onclick=()=>menu.classList.remove('open');
+
+menu.onclick=e=>{
+ if(e.target===menu)menu.classList.remove('open');
+};
+
+document.querySelectorAll('.menuitem').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.menuitem').forEach(x=>x.classList.remove('selected'));
+ b.classList.add('selected');
+
+ if(b.textContent.includes('Live Drops')){
+  menu.classList.remove('open');
+ }else{
+  document.getElementById('modalTitle').textContent=b.textContent.trim();
+  document.getElementById('modalText').textContent=
+  'This section will open the matching page in the full website build. Your existing loot database will remain preserved.';
+  document.getElementById('modal').classList.add('open');
+  menu.classList.remove('open');
+ }
+}));
+
+// Preview-only demonstration: no polling and no requests are made to the live website.
+</script>
 </body>
 </html>
