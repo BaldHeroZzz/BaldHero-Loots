@@ -1,3 +1,4 @@
+
 {
   "name": "dqr-drops-2",
   "version": "1.0.0",
@@ -5,13 +6,15 @@
   "description": "Mobile-first Dungeon Quest Discord drop tracker",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "generate-vapid": "node -e \"console.log(require('web-push').generateVAPIDKeys())\""
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
     "discord.js": "^14.19.3",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "web-push": "^3.6.7"
   }
 }
