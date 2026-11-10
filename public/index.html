@@ -77,4 +77,229 @@ $('menuBtn').onclick=()=>$('menu').classList.toggle('open');document.querySelect
 $('soundBtn').onclick=async()=>{try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();soundOn=!soundOn;$('soundBtn').textContent=soundOn?'♫✓':'♫';$('soundHint').textContent=soundOn?'Notification sounds enabled for Purple Gildenscales, Legendary and Ultimate drops.':'Tap ♫ to enable drop notification sounds.';if(soundOn)playTone('legendary')}catch(e){$('soundHint').textContent='Sound is not available in this browser.'}};
 async function refresh(){try{const r=await fetch('/api/drops',{cache:'no-store'});if(!r.ok)throw Error('API '+r.status);const incoming=await r.json();const newOnes=[];for(const run of incoming){if(!knownIds.has(run.id)){if(!firstLoad)newOnes.push(run);knownIds.add(run.id)}}records=incoming;$('status').textContent='● LIVE';$('runCount').textContent=records.length.toLocaleString();$('dropCount').textContent=records.reduce((n,r)=>n+(r.items||[]).reduce((m,i)=>m+(Number(i.quantity)||1),0),0).toLocaleString();$('latestTime').textContent=records.length?new Date(records[0].timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Waiting';renderFeed(new Set(newOnes.map(x=>x.id)));renderDatabase();renderLatestRun();if(!firstLoad){newOnes.reverse().forEach(notify)}firstLoad=false}catch(e){$('status').textContent='● RECONNECTING';console.error(e)}}
 refresh();setInterval(refresh,3000);
-</script></body></html>
+</script>
+<style>
+#dqr-notif {
+  margin: 22px auto;
+  padding: 18px;
+  max-width: 700px;
+  border: 1px solid #7544ad;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #1c1230, #100c1c);
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+#dqr-notif h3 { margin: 0 0 6px; color: #d9b5ff; }
+#dqr-notif p { color: #b9a9ca; font-size: 13px; }
+.dqr-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid #38264c;
+  gap: 12px;
+}
+.dqr-switch-row:last-of-type { border-bottom: 0; }
+.dqr-switch-row label { font-size: 14px; font-weight: 600; }
+.dqr-toggle {
+  width: 46px;
+  height: 25px;
+  accent-color: #a855f7;
+  cursor: pointer;
+}
+#dqr-enable {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: #8b45ce;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+#dqr-notif-status {
+  font-size: 12px;
+  margin-top: 12px;
+  color: #d4c4e8;
+}
+</style>
+
+<section id="dqr-notif">
+  <h3>🔔 Drop Notifications</h3>
+  <p>Choose which drops you want to receive on your phone.</p>
+
+  <div class="dqr-switch-row">
+    <label for="dqr-legendary">⭐ Legendary Drops</label>
+    <input class="dqr-toggle" id="dqr-legendary" type="checkbox" checked>
+  </div>
+
+  <div class="dqr-switch-row">
+    <label for="dqr-ultimate">🔥 Ultimate Drops</label>
+    <input class="dqr-toggle" id="dqr-ultimate" type="checkbox" checked>
+  </div>
+
+  <div class="dqr-switch-row">
+    <label for="dqr-purple">🟣 Purple Gildenscales only</label>
+    <input class="dqr-toggle" id="dqr-purple" type="checkbox" checked>
+  </div>
+
+  <button id="dqr-enable">Enable Lock-Screen Notifications</button>
+  <div id="dqr-notif-status">Notifications are not enabled yet.</div>
+</section>
+
+<script>
+(() => {
+  const status = document.getElementById("dqr-notif-status");
+  const enableButton = document.getElementById("dqr-enable");
+
+  const ids = {
+    legendary: "dqr-legendary",
+    ultimate: "dqr-ultimate",
+    purpleGildenscale: "dqr-purple"
+  };
+
+  const saved = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("dqrPushPrefs") || "{}");
+    } catch {
+      return {};
+    }
+  })();
+
+  Object.entries(ids).forEach(([key, id]) => {
+    document.getElementById(id).checked =
+      saved[key] === undefined ? true : saved[key];
+  });
+
+  function getPreferences() {
+    return Object.fromEntries(
+      Object.entries(ids).map(([key, id]) => [
+        key,
+        document.getElementById(id).checked
+      ])
+    );
+  }
+
+  function savePreferences() {
+    const prefs = getPreferences();
+    localStorage.setItem("dqrPushPrefs", JSON.stringify(prefs));
+    return prefs;
+  }
+
+  function base64ToBytes(base64) {
+    const padding = "=".repeat((4 - base64.length % 4) % 4);
+    const value = (base64 + padding)
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+    const raw = atob(value);
+    return Uint8Array.from(raw, c => c.charCodeAt(0));
+  }
+
+  async function registerServiceWorker() {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      throw new Error("This browser does not support push notifications.");
+    }
+    return navigator.serviceWorker.register("/sw.js");
+  }
+
+  async function updateServerPreferences(subscription) {
+    const response = await fetch("/api/push/preferences", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        endpoint: subscription.endpoint,
+        preferences: savePreferences()
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Could not save notification settings.");
+    }
+  }
+
+  enableButton.addEventListener("click", async () => {
+    enableButton.disabled = true;
+    status.textContent = "Setting up notifications...";
+
+    try {
+      if (!window.isSecureContext) {
+        throw new Error("Please open the HTTPS website.");
+      }
+
+      if (!("Notification" in window)) {
+        throw new Error("Notifications are not supported.");
+      }
+
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") {
+        throw new Error("Notification permission was not granted.");
+      }
+
+      const registration = await registerServiceWorker();
+      const keyResponse = await fetch("/api/push/public-key");
+
+      if (!keyResponse.ok) {
+        throw new Error("Push keys are not configured on the server yet.");
+      }
+
+      const keyData = await keyResponse.json();
+      let subscription = await registration.pushManager.getSubscription();
+
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: base64ToBytes(keyData.publicKey)
+        });
+      }
+
+      const response = await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subscription: subscription.toJSON(),
+          preferences: savePreferences()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Could not save your device subscription.");
+      }
+
+      status.textContent = "✅ Notifications successfully enabled!";
+      enableButton.textContent = "Notifications Enabled";
+    } catch (err) {
+      status.textContent = "⚠️ " + err.message;
+    } finally {
+      enableButton.disabled = false;
+    }
+  });
+
+  Object.values(ids).forEach(id => {
+    document.getElementById(id).addEventListener("change", async () => {
+      savePreferences();
+
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+
+        if (subscription) {
+          await updateServerPreferences(subscription);
+          status.textContent = "✅ Preferences saved.";
+        } else {
+          status.textContent = "Preferences saved. Enable notifications to activate them.";
+        }
+      } catch (err) {
+        status.textContent = "⚠️ " + err.message;
+      }
+    });
+  });
+
+  registerServiceWorker().catch(err => {
+    status.textContent = "⚠️ " + err.message;
+  });
+})();
+</script>
+</body></html>
