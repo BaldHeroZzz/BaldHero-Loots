@@ -310,7 +310,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
     ]
   });
 
-  async function ingest(message) {
+  async function ingest(message, options = {}) {
     try {
       if (message.partial) {
         message = await message.fetch();
@@ -338,7 +338,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
 
       writeDrops([...parsed, ...updated]);
 
-      if (telegram) {
+      if (telegram && !options.silent) {
         await telegram.notifyRecord(parsed[0]);
       }
 
@@ -373,7 +373,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
       for (const message of [...history.values()].reverse()) {
         const before = readDrops().length;
 
-        await ingest(message);
+        await ingest(message, { silent: true });
 
         if (readDrops().length > before) {
           addedCount++;
