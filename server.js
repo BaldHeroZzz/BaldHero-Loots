@@ -3,7 +3,6 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const { Client, GatewayIntentBits, Partials } = require("discord.js");
-const { createTelegramReporter } = require("./telegram");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +15,6 @@ if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]");
 app.use(express.json({ limit: "2mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
-const telegram = createTelegramReporter({ readDrops, dataDir: DATA_DIR });
 
 function readDrops() {
   try {
@@ -310,7 +308,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
     ]
   });
 
-  async function ingest(message, options = {}) {
+  async function ingest(message) {
     try {
       if (message.partial) {
         message = await message.fetch();
@@ -337,10 +335,6 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
       );
 
       writeDrops([...parsed, ...updated]);
-
-      if (telegram && !options.silent) {
-        await telegram.notifyRecord(parsed[0]);
-      }
 
       console.log(
         `DROP PARSED: ${parsed[0].dungeon || "Unknown dungeon"} | ` +
@@ -373,7 +367,7 @@ if (process.env.DISCORD_TOKEN && process.env.DISCORD_CHANNEL_ID) {
       for (const message of [...history.values()].reverse()) {
         const before = readDrops().length;
 
-        await ingest(message, { silent: true });
+        await ingest(message);
 
         if (readDrops().length > before) {
           addedCount++;
