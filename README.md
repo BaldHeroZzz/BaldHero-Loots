@@ -29,3 +29,14 @@ Attach a Render Persistent Disk at `/var/data` so history survives restarts and 
 
 ## Parser limitations
 The starter parser supports text-based embeds with item lines like `Item Name, Epic x1, pot 12.3M spell (42%)`. Actual embed formatting may vary; test with a live Sottoro message and adjust if necessary. Image-only embeds are not parsed. Startup backfill checks the latest 100 messages only.
+
+## Telegram loot reporting
+
+The Discord listener can also report drops to a Telegram chat. Create a Telegram bot with BotFather, add it to your destination chat, and set these Render environment variables (keep the token private):
+
+- `TELEGRAM_BOT_TOKEN` = bot token from BotFather
+- `TELEGRAM_CHAT_ID` = destination chat ID (the bot must be able to post there)
+- `TELEGRAM_REPORT_MINUTES` = optional periodic report interval; defaults to `5`
+- `TELEGRAM_NO_DROP_MINUTES` = optional inactivity alert threshold; defaults to `10`
+
+Telegram sends immediate messages for Ultimate, Legendary, and Gildenscale drops; periodic activity reports; a no-drop warning after the configured idle period; and a daily summary at midnight Philippines time. The bot also supports `/stats`, `/drops`, `/history`, `/top`, and `/help` in the configured chat. The reporter uses Node.js 18's built-in `fetch`; no extra npm dependency is required. Optional item photos are sent when an ingested item includes an `imageUrl` or `image` URL; the current Discord parser does not yet assign image URLs automatically.
